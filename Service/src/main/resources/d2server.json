@@ -1,0 +1,37 @@
+{
+  "d2Clusters" : {
+    "microservice.v1": {
+      "services":
+      {
+        "microservice.v1" : {
+          "path" : "/microservice.v1"
+        }
+      }
+    }
+  },
+  "defaultServiceProperties" : {
+    "loadBalancerStrategyList" : [
+      "degraderV3"
+    ],
+    "prioritizedSchemes" : [
+      "http"
+    ],
+    "loadBalancerStrategyProperties" : {
+      "http.loadBalancer.updateIntervalMs" : "5000",
+      "http.loadBalancer.pointsPerWeight" : "100"
+    },
+    "transportClientProperties" : {
+      "http.requestTimeout" : "10000"
+    },
+    "degraderProperties" : {
+      "degrader.minCallCount" : "10",
+      "degrader.lowErrorRate" : "0.01",
+      "degrader.highErrorRate" : "0.1"
+    }
+  },
+  "zkConnectString" : "localhost:2181",
+  "zkSessionTimeout" : 5000,
+  "zkBasePath" : "/d2",
+  "zkRetryLimit" : 10
+}
+
