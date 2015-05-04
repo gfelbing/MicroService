@@ -1,5 +1,6 @@
 package de.gfelbing.microservice.service.d2.server;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
@@ -10,8 +11,9 @@ import com.linkedin.d2.balancer.servers.ZooKeeperConnectionManager;
 import com.linkedin.d2.balancer.servers.ZooKeeperServer;
 import com.linkedin.d2.discovery.util.D2Config;
 import de.gfelbing.microservice.service.http.HttpJettyServerModule;
-import de.gfelbing.microservice.service.util.ImmutableListCollector;
+import de.gfelbing.microservice.service.util.GuavaCollect;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
@@ -61,17 +63,21 @@ public final class D2ServerModule extends AbstractModule {
     @Provides
     @Singleton
     @Inject
-    ZooKeeperAnnouncer[] zooKeeperAnnouncers(@HttpJettyServerModule.RestLiURI final String uri,
+    ZooKeeperAnnouncer[] zooKeeperAnnouncers(@HttpJettyServerModule.RestLiURI final ImmutableList<String> uris,
                                              final D2ServerConfiguration d2ServerConfiguration) {
         final Map<String, Object> clusters = d2ServerConfiguration.getD2Clusters();
         return clusters.entrySet().stream()
                 .map(entry -> {
-                    ZooKeeperAnnouncer zooKeeperAnnouncer = new ZooKeeperAnnouncer(new ZooKeeperServer());
-                    zooKeeperAnnouncer.setCluster(entry.getKey());
-                    zooKeeperAnnouncer.setUri(uri);
-                    zooKeeperAnnouncer.setWeightOrPartitionData(1);
-                    return zooKeeperAnnouncer;
+                    return uris.stream().map(uri -> {
+                        ZooKeeperAnnouncer zooKeeperAnnouncer = new ZooKeeperAnnouncer(new ZooKeeperServer());
+                        zooKeeperAnnouncer.setCluster(entry.getKey());
+                        zooKeeperAnnouncer.setUri(uri);
+                        zooKeeperAnnouncer.setWeightOrPartitionData(1);
+                        return zooKeeperAnnouncer;
+                    }).collect(GuavaCollect.immutableList());
                 })
-                .collect(new ImmutableListCollector<>()).toArray(new ZooKeeperAnnouncer[clusters.size()]);
+                .flatMap(Collection::stream)
+                .collect(GuavaCollect.immutableList())
+                .toArray(new ZooKeeperAnnouncer[clusters.size()]);
     }
 }

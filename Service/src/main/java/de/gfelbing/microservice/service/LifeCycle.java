@@ -11,12 +11,14 @@ public interface LifeCycle {
 
     /**
      * Starts the Lifecycle. After a successful start getHealthState() should deliver OK.
+     *
      * @throws Exception if something goes wrong.
      */
     void start() throws Exception;
 
     /**
      * Stops the Lifecycle. After a successful start getHealthState() should deliver OK.
+     *
      * @throws Exception if something goes wrong.
      */
     void stop() throws Exception;

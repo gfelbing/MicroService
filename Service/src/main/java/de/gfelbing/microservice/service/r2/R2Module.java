@@ -21,6 +21,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * This Module provides a R2-HTTP-Server, which can be used for a Server on HTTP-Layer.
+ *
  * @author gfelbing@github.com on 02.05.15.
  */
 public final class R2Module extends AbstractModule {
@@ -42,10 +43,10 @@ public final class R2Module extends AbstractModule {
     @Provides
     @Singleton
     @Inject
-    RestLiConfig getRestLiConfig() {
+    RestLiConfig getRestLiConfig(final Configuration configuration) {
         final RestLiConfig config = new RestLiConfig();
         config.setServerNodeUri(URI.create("/"));
-        config.addResourcePackageNames(Configuration.REST_PACKAGES);
+        config.addResourcePackageNames(configuration.getRestPackages());
         return config;
     }
 

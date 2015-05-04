@@ -35,7 +35,8 @@ public final class ServiceModule extends AbstractModule {
 
     @Provides
     @Singleton
-    ScheduledExecutorService scheduledExecutorService() {
-        return Executors.newScheduledThreadPool(Configuration.THREAD_POOL_SIZE);
+    @Inject
+    ScheduledExecutorService scheduledExecutorService(final Configuration configuration) {
+        return Executors.newScheduledThreadPool(configuration.getThreadpoolsize());
     }
 }

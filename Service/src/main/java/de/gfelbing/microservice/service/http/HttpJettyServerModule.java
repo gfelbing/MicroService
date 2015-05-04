@@ -1,5 +1,6 @@
 package de.gfelbing.microservice.service.http;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.AbstractModule;
 import com.google.inject.BindingAnnotation;
 import com.google.inject.Inject;
@@ -8,10 +9,10 @@ import com.google.inject.Singleton;
 import com.linkedin.r2.transport.http.server.HttpServer;
 import com.linkedin.restli.server.guice.GuiceRestliServlet;
 import de.gfelbing.microservice.service.config.Configuration;
+import de.gfelbing.microservice.service.util.GuavaCollect;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
@@ -38,17 +39,6 @@ public final class HttpJettyServerModule extends AbstractModule {
     }
 
     /**
-     * @return Connectors used by the HTTP-Server.
-     */
-    @Provides
-    @Singleton
-    Connector[] connectors() {
-        SelectChannelConnector connector = new SelectChannelConnector();
-        connector.setPort(Configuration.PORT);
-        return new Connector[]{connector};
-    }
-
-    /**
      * Provides a ContextHandler containing a ResourceHandler.
      */
     @BindingAnnotation
@@ -56,13 +46,15 @@ public final class HttpJettyServerModule extends AbstractModule {
     @Retention(RetentionPolicy.RUNTIME)
     public static @interface StaticHandler {
     }
+
     @StaticHandler
     @Provides
     @Singleton
-    ContextHandler staticResourceHandler() throws UnavailableException {
+    @Inject
+    ContextHandler staticResourceHandler(final Configuration configuration) throws UnavailableException {
         final ResourceHandler resourceHandler = new ResourceHandler();
-        resourceHandler.setResourceBase(Configuration.STATIC_RESOURCES);
-        final ContextHandler contextHandler = new ContextHandler(Configuration.STATIC_CONTEXT);
+        resourceHandler.setResourceBase(configuration.getStaticResources());
+        final ContextHandler contextHandler = new ContextHandler(configuration.getStaticContext());
         contextHandler.setHandler(resourceHandler);
         return contextHandler;
     }
@@ -75,13 +67,14 @@ public final class HttpJettyServerModule extends AbstractModule {
     @Retention(RetentionPolicy.RUNTIME)
     public static @interface RestLiHandler {
     }
+
     @RestLiHandler
     @Provides
     @Singleton
     @Inject
-    ContextHandler restContextHandler(final GuiceRestliServlet restliServlet) {
+    ContextHandler restContextHandler(final GuiceRestliServlet restliServlet, final Configuration configuration) {
         final ServletContextHandler handler = new ServletContextHandler();
-        handler.setContextPath(Configuration.REST_CONTEXT);
+        handler.setContextPath(configuration.getRestContext());
         handler.addServlet(new ServletHolder(restliServlet), "/*");
         return handler;
     }
@@ -94,8 +87,9 @@ public final class HttpJettyServerModule extends AbstractModule {
     @Inject
     HttpJettyServer getHttpJettyServer(@RestLiHandler final ContextHandler restLiHandler,
                                        @StaticHandler final ContextHandler staticResourceHandler,
-                                       final Connector[] connectors) {
-        return new HttpJettyServer(connectors)
+                                       final Configuration configuration) {
+        final ImmutableList<Connector> httpConnectors = configuration.getHttpConnectors();
+        return new HttpJettyServer(httpConnectors.toArray(new Connector[httpConnectors.size()]))
                 .addHandler(restLiHandler)
                 .addHandler(staticResourceHandler);
     }
@@ -107,14 +101,20 @@ public final class HttpJettyServerModule extends AbstractModule {
     @BindingAnnotation
     @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
     @Retention(RetentionPolicy.RUNTIME)
-    public static @interface RestLiURI { }
+    public static @interface RestLiURI {
+    }
+
     @RestLiURI
     @Provides
     @Singleton
     @Inject
-    String restURI(@RestLiHandler final ContextHandler contextHandler) {
+    ImmutableList<String> restURI(@RestLiHandler final ContextHandler contextHandler,
+                                  final Configuration configuration) {
         try {
-            return "http://" + Configuration.HOST + ":" + Configuration.PORT + "/" + contextHandler.getContextPath();
+            return configuration.getHttpConnectors().stream().map(con -> {
+                return "http://" + con.getHost() + ":" + con.getPort() + contextHandler.getContextPath();
+            }).collect(GuavaCollect.immutableList());
+
         } catch (ArrayIndexOutOfBoundsException e) {
             LOG.error("Couldn't parse Server URI: ", e);
             return null;

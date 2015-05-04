@@ -6,7 +6,7 @@ import com.google.inject.Singleton;
 import de.gfelbing.microservice.api.HealthState;
 import de.gfelbing.microservice.service.d2.server.D2Server;
 import de.gfelbing.microservice.service.http.HttpJettyServer;
-import de.gfelbing.microservice.service.util.ImmutableListCollector;
+import de.gfelbing.microservice.service.util.GuavaCollect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +29,7 @@ public final class Service {
 
     /**
      * Starts all servers and creates a shutdown-hook to gracefully shutdown on signals.
+     *
      * @throws java.lang.Exception uncaught exceptions from the servers' start.
      */
     public void start() throws Exception {
@@ -47,6 +48,7 @@ public final class Service {
 
     /**
      * Gracefully shutting down of all servers.
+     *
      * @throws java.lang.Exception uncaught exceptions from the servers' stop.
      */
     public void stop() throws Exception {
@@ -60,6 +62,6 @@ public final class Service {
      * @return all HealthStates of all Servers.
      */
     public ImmutableList<HealthState> getHealthState() {
-        return servers.stream().map(s -> s.getHealthState()).collect(new ImmutableListCollector<>());
+        return servers.stream().map(s -> s.getHealthState()).collect(GuavaCollect.immutableList());
     }
 }

@@ -18,5 +18,6 @@ dependencies {
     compile deps.guice
     compile deps.json
     compile deps.logback
+    compile deps.configuration
     checkstyleConfig deps.checkstyle
 }

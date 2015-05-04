@@ -48,9 +48,9 @@ public final class D2ClientConfiguration {
 
     private static Map<String, Long> asMap(final JSONObject jsonObject) throws JSONException {
         final Map<String, Long> map = new HashMap<>();
-        final Iterator<String> iterator = jsonObject.keys();
+        final Iterator iterator = jsonObject.keys();
         while (iterator.hasNext()) {
-            final String key = iterator.next();
+            final String key = (String) iterator.next();
             map.put(key, jsonObject.getLong(key));
         }
         return map;

@@ -21,14 +21,17 @@ public final class HealthCheckResource extends SimpleResourceTemplate<HealthChec
 
     /**
      * Default constructor.
+     *
      * @param mainService The Service which handles all lifecycles.
      */
-    @Inject HealthCheckResource(final Service mainService) {
+    @Inject
+    HealthCheckResource(final Service mainService) {
         this.service = mainService;
     }
 
     /**
      * SimpleResource for the HealthCheck.
+     *
      * @return Cummulated state of all LifeCycle-Classes. The worst state will cause the result.
      * "worse" states in descending order: ERROR, SHUTDOWN, STARTING, OK
      */

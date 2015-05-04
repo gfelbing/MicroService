@@ -1,43 +1,100 @@
 package de.gfelbing.microservice.service.config;
 
-import java.util.Arrays;
+import com.google.common.collect.ImmutableList;
+import com.google.inject.Singleton;
+import de.gfelbing.microservice.service.util.GuavaCollect;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.nio.SelectChannelConnector;
+
 import java.util.Collection;
 
 /**
- * Some configuration parameters for the service.
+ * Provides configured and generated values.
  *
- * @author gfelbing@github.com on 02.05.15.
+ * @author gfelbing@github.com on 04.05.15.
  */
-public interface Configuration {
-    /**
-     * The IP/Host, the webserver will bind the socket to.
-     */
-    String HOST = "ermunaz";
-    /**
-     * The Port, the webserver will bind the socket to.
-     */
-    Integer PORT = 8080;
+@Singleton
+public final class Configuration {
+
+    private final Integer threadpoolsize;
+
+    private final ImmutableList<Connector> httpConnectors;
+
+    private final ImmutableList<String> restPackages;
+    private final String restContext;
+
+    private final String staticResources;
+    private final String staticContext;
 
     /**
-     * The size of the thread pool used by restli and jetty.
+     * Package-Local Constructor used by guice.
+     * @throws ConfigurationException if parsing of the file service.properties fails.
      */
-    Integer THREAD_POOL_SIZE = 4;
+    Configuration() throws ConfigurationException {
+        final PropertiesConfiguration config = new PropertiesConfiguration("service.properties");
+        this.threadpoolsize = config.getInt("service.threadpoolsize");
+        this.httpConnectors = createConnectors(asStringList(config.getList("http.hosts")), config.getInt("http.port"));
+        this.restPackages = asStringList(config.getList("rest.packages"));
+        this.restContext = config.getString("rest.context");
+        this.staticResources = config.getString("static.resources");
+        this.staticContext = config.getString("static.context");
+    }
+
+    private static ImmutableList<String> asStringList(final Collection<Object> objects) {
+        return objects.stream().map(p -> ((String) p)).collect(GuavaCollect.immutableList());
+    }
+
+    private static ImmutableList<Connector> createConnectors(final ImmutableList<String> hosts, final Integer port) {
+        return hosts.stream().map(host -> {
+            Connector connector = new SelectChannelConnector();
+            connector.setHost(host);
+            connector.setPort(port);
+            return connector;
+        }).collect(GuavaCollect.immutableList());
+    }
 
     /**
-     * The name of the package, where the rest.li resources are located.
+     * @return size of the thread pool used by restli and jetty.
      */
-    Collection<String> REST_PACKAGES = Arrays.asList("de.gfelbing.microservice.service.restli");
-    /**
-     * The context path for rest resources.
-     */
-    String REST_CONTEXT = "/microservice.v1";
+    public Integer getThreadpoolsize() {
+        return threadpoolsize;
+    }
 
     /**
-     * The context path for static resources.
+     * @return connectors, the webserver will bind the socket to.
+     * Can be multiple ones for different IPs, but all of them will have the same port
      */
-    String STATIC_CONTEXT = "/static";
+    public ImmutableList<Connector> getHttpConnectors() {
+        return httpConnectors;
+    }
+
     /**
-     * The path to the static resource-folder.
+     * @return name of the packages, where the rest.li resources are located.
      */
-    String STATIC_RESOURCES = "/tmp/static/";
+    public ImmutableList<String> getRestPackages() {
+        return restPackages;
+    }
+
+    /**
+     * @return context path for rest resources.
+     */
+    public String getRestContext() {
+        return restContext;
+    }
+
+    /**
+     * @return path to the static resource-folder.
+     */
+    public String getStaticResources() {
+        return staticResources;
+    }
+
+    /**
+     * @return context path for static resources.
+     */
+    public String getStaticContext() {
+        return staticContext;
+    }
 }
