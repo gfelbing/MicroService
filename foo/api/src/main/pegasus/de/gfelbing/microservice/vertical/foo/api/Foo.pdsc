@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "Foo",
+  "namespace": "de.gfelbing.microservice.vertical.foo.api",
+  "doc": "I am a Foo",
+  "fields": [
+    {
+      "name": "Mood",
+      "type": "string"
+    }
+  ]
+}
