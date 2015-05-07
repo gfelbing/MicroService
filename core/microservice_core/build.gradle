@@ -1,0 +1,29 @@
+apply plugin: 'pegasus'
+apply plugin: 'checkstyle'
+
+configurations {
+    checkstyleConfig
+    all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+}
+
+dependencies {
+    compile project(path: ':microservice_core_api', configuration: 'dataTemplate')
+    compile deps.pegasus.restliServer
+    compile deps.pegasus.restliClient
+    compile deps.pegasus.r2Jetty
+    compile deps.pegasus.restliGuiceBridge
+    compile deps.pegasus.d2
+    compile deps.guice
+    compile deps.json
+    compile deps.logback
+    compile deps.configuration
+    compile deps.parseq
+    checkstyleConfig deps.checkstyle
+    restClientCompile deps.pegasus.restliCommon
+}
+
+checkstyle {
+    toolVersion = versions.checkstyle
+    ignoreFailures = true
+}
+
