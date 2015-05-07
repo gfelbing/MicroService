@@ -1,10 +1,8 @@
 /*
-!/API
-!/Service
-!/.gitignore
-!/.gradlew
-!/build.gradle
-!/gradlew*
+!.gitignore
+!build.gradle
+!gradlew
+!gradlew.bat
+!/core
+!/foo
 !/LICENSE
-!/settings.gradle
-!/vendor.gradle
