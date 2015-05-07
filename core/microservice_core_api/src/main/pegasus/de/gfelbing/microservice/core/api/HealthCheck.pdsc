@@ -1,0 +1,53 @@
+{
+  "type": "record",
+  "name": "HealthCheck",
+  "namespace": "de.gfelbing.microservice.core.api",
+  "doc": "Generate a HealthCheck",
+  "fields": [
+    {
+      "name": "Status",
+      "type": {
+        "type": "enum",
+        "name": "HealthState",
+        "symbols": [
+          "CREATED",
+          "STARTING",
+          "OK",
+          "STOPPING",
+          "STOPPED",
+          "ERROR"
+        ],
+        "symbolDocs": {
+          "CREATED": "Service is created but not started yet, how can you see this?",
+          "STARTING": "Service is starting, please wait.",
+          "OK": "Service is up and healthy.",
+          "STOPPING": "Service is currently shutting down.",
+          "STOPPED": "Service has been stopped, how can you see this?",
+          "ERROR": "Somethings wrong."
+        }
+      }
+    }
+  ]
+}
+
+/*
+{
+              "name": "Status",
+              "type": {
+                "type": "enum",
+                "name": "HealthState",
+                "symbols": [
+                  "OK",
+                  "STARTING",
+                  "SHUTDOWN",
+                  "ERROR"
+                ],
+                "symbolDocs": {
+                  "OK": "Service is running, everything is fine.",
+                  "STARTING": "Service is starting, please wait.",
+                  "SHUTDOWN": "Service is currently shutting down.",
+                  "ERROR": "Somethings wrong."
+                }
+              }
+            }
+            */
