@@ -1,0 +1,39 @@
+version = '0.0.1-SNAPSHOT'
+
+buildscript {
+    apply from: 'build-support/vendor.gradle'
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath deps.pegasus.gradlePlugins
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    configurations {
+        all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    }
+
+    afterEvaluate {
+        if (project.plugins.hasPlugin('pegasus')) {
+            dependencies {
+                dataTemplateCompile deps.pegasus.data
+                restClientCompile deps.pegasus.restliClient
+            }
+        }
+    }
+}

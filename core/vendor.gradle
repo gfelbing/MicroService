@@ -1,0 +1,25 @@
+ext {
+    versions = [
+            'pegasus': '2.2.5',
+            'checkstyle': '6.6'
+    ]
+    deps = [
+            'pegasus': [
+                    'data'                 : 'com.linkedin.pegasus:data:' + versions.pegasus,
+                    'generator'            : 'com.linkedin.pegasus:generator:' + versions.pegasus,
+                    'restliCommon'         : 'com.linkedin.pegasus:restli-common:' + versions.pegasus,
+                    'restliClient'         : 'com.linkedin.pegasus:restli-client:' + versions.pegasus,
+                    'restliServer'         : 'com.linkedin.pegasus:restli-server:' + versions.pegasus,
+                    'restliGuiceBridge'    : 'com.linkedin.pegasus:restli-guice-bridge:'+versions.pegasus,
+                    'r2Jetty'              : 'com.linkedin.pegasus:r2-jetty:' + versions.pegasus,
+                    'd2'                   : 'com.linkedin.pegasus:d2:' + versions.pegasus,
+                    'gradlePlugins'        : 'com.linkedin.pegasus:gradle-plugins:'+versions.pegasus
+            ],
+            'guice': 'com.google.inject:guice:4.0',
+            'json': 'com.googlecode.json-simple:json-simple:1.1.1',
+            'logback': 'ch.qos.logback:logback-classic:1.1.3',
+            'checkstyle': 'com.puppycrawl.tools:checkstyle:'+versions.checkstyle,
+            'configuration': 'commons-configuration:commons-configuration:1.10',
+            'parseq': 'com.linkedin.parseq:parseq:2.0.1',
+    ]
+}
