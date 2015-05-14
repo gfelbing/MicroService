@@ -2,22 +2,6 @@ apply plugin: 'checkstyle'
 
 configurations {
     checkstyleConfig
-    all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-}
-
-dependencies {
-    compile deps.configuration
-    compile deps.logback
-    compile deps.google.guava
-    compile deps.google.guice
-    compile deps.google.json
-    compile deps.jetty
-    compile deps.swagger.jersey
-    compile deps.swagger.hk2guice
-    compile deps.swagger.jaxrs
-    compile deps.linkedin.d2
-    compile deps.linkedin.parseq
-    checkstyleConfig deps.checkstyle
 }
 
 checkstyle {
@@ -25,3 +9,18 @@ checkstyle {
     ignoreFailures = true
 }
 
+dependencies {
+    compile deps.configuration
+    compile deps.core
+    compile deps.google.guava
+    compile deps.google.guice
+    compile deps.google.json
+    compile deps.jetty
+    compile deps.linkedin.d2
+    compile deps.linkedin.parseq
+    compile deps.logback
+    compile deps.swagger.hk2guice
+    compile deps.swagger.jersey
+    compile deps.swagger.jaxrs
+    checkstyleConfig deps.checkstyle
+}

@@ -4,21 +4,20 @@ import com.google.common.collect.ImmutableList;
 import de.gfelbing.microservice.core.http.jetty.server.JettyServerConfiguration;
 import de.gfelbing.microservice.core.util.GuavaCollect;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.eclipse.jetty.server.Connector;
 
 import javax.inject.Inject;
 
 /**
- * TODO: Add statement here.
+ * Implementation of @Link{JettyServerConfiguration} used by @link{JettyServerModule}.
  *
  * @author gfelbing@github.com on 14.05.15.
  */
-public class JettyServerConfig implements JettyServerConfiguration {
+public final class JettyServerConfig implements JettyServerConfiguration {
 
     private final PropertiesConfiguration configuration;
 
     @Inject
-    JettyServerConfig(PropertiesConfiguration configuration) {
+    JettyServerConfig(final PropertiesConfiguration configuration) {
         this.configuration = configuration;
     }
 

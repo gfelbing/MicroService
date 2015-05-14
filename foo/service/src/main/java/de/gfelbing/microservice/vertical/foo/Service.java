@@ -1,10 +1,11 @@
 package de.gfelbing.microservice.vertical.foo;
 
 import com.google.common.collect.ImmutableList;
+import com.google.inject.Guice;
 import com.google.inject.Singleton;
+import de.gfelbing.microservice.core.common.LifeCycle;
 import de.gfelbing.microservice.core.discovery.server.D2Server;
 import de.gfelbing.microservice.core.http.jetty.server.JettyServer;
-import de.gfelbing.microservice.core.common.LifeCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +19,19 @@ import java.util.Map;
  * @author gfelbing@github.com on 14.05.15.
  */
 @Singleton
-public class Service implements LifeCycle {
+public final class Service implements LifeCycle {
+
+    /**
+     * Starting the Service by creating an injector and initializing a Service-Instance.
+     *
+     * @param args aren't used yet.
+     * @throws java.lang.Exception uncaught from Service in order let the process die if something goes wrong.
+     */
+    public static void main(final String[] args) throws Exception {
+        Guice.createInjector(new ServiceModule())
+            .getInstance(Service.class)
+            .start();
+    }
 
     private static final Logger LOG = LoggerFactory.getLogger(Service.class);
 

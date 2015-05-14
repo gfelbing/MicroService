@@ -18,9 +18,10 @@ import java.lang.annotation.Target;
  * Module for Jetty ContextHandler.
  * <p>
  * With this module you are able to inject:
- * - A #link{ContextHandler} for static resources using the #link{JettyStaticContextHandler} annotation
+ * - A #link{ContextHandler} for static resources.
  * <p>
- * In order to use this module, you have to provide a implementation of #link{ServiceConfiguration}
+ * In order to use this module, you have to provide a implementation of
+ * - @link{StaticContextHandlerConfiguration}
  *
  * @author gfelbing@github.com on 06.05.15.
  */
@@ -31,23 +32,23 @@ public final class StaticContextHandlerModule extends AbstractModule {
     }
 
     /**
-     * Provides a ContextHandler containing a ResourceHandler.
+     * Has to be annotated or guice can't bind annother ContextHandler.
      */
     @BindingAnnotation
     @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
     @Retention(RetentionPolicy.RUNTIME)
-    public static @interface JettyStaticContextHandler {
+    public static @interface StaticContextHandler {
     }
 
-    @JettyStaticContextHandler
     @Provides
+    @StaticContextHandler
     @Singleton
     @Inject
     ContextHandler staticResourceHandler(final StaticContextHandlerConfiguration serviceConfiguration)
             throws UnavailableException {
         final ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setResourceBase(serviceConfiguration.getStaticResources());
-        final ContextHandler contextHandler = new ContextHandler(serviceConfiguration.getStaticContext());
+        final ContextHandler contextHandler = new ContextHandler("/" + serviceConfiguration.getStaticContext());
         contextHandler.setHandler(resourceHandler);
         return contextHandler;
     }

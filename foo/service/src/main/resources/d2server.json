@@ -1,36 +1,36 @@
 {
-  "d2Clusters" : {
-    "vertical.foo": {
+  "d2Clusters": {
+    "vertical.service": {
       "services": {
-        "foo.v1" : {
-          "path" : "/foo.v1"
+        "vertical.service.v1": {
+          "path": "/vertical.service.v1"
         }
       }
     }
   },
-  "defaultServiceProperties" : {
-    "loadBalancerStrategyList" : [
+  "defaultServiceProperties": {
+    "loadBalancerStrategyList": [
       "degraderV3"
     ],
-    "prioritizedSchemes" : [
+    "prioritizedSchemes": [
       "http"
     ],
-    "loadBalancerStrategyProperties" : {
-      "http.loadBalancer.updateIntervalMs" : "5000",
-      "http.loadBalancer.pointsPerWeight" : "100"
+    "loadBalancerStrategyProperties": {
+      "http.loadBalancer.updateIntervalMs": "5000",
+      "http.loadBalancer.pointsPerWeight": "100"
     },
-    "transportClientProperties" : {
-      "http.requestTimeout" : "10000"
+    "transportClientProperties": {
+      "http.requestTimeout": "10000"
     },
-    "degraderProperties" : {
-      "degrader.minCallCount" : "10",
-      "degrader.lowErrorRate" : "0.01",
-      "degrader.highErrorRate" : "0.1"
+    "degraderProperties": {
+      "degrader.minCallCount": "10",
+      "degrader.lowErrorRate": "0.01",
+      "degrader.highErrorRate": "0.1"
     }
   },
-  "zkConnectString" : "localhost:2181",
-  "zkSessionTimeout" : 5000,
-  "zkBasePath" : "/d2",
-  "zkRetryLimit" : 10
+  "zkConnectString": "localhost:2181",
+  "zkSessionTimeout": 5000,
+  "zkBasePath": "/d2",
+  "zkRetryLimit": 10
 }
 

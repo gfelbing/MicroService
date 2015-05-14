@@ -9,11 +9,12 @@ import org.apache.commons.configuration.PropertiesConfiguration;
  *
  * @author gfelbing@github.com on 14.05.15.
  */
-public class StaticContextHandlerConfig implements StaticContextHandlerConfiguration {
+public final class StaticContextHandlerConfig implements StaticContextHandlerConfiguration {
 
     private final PropertiesConfiguration configuration;
 
-    @Inject StaticContextHandlerConfig(PropertiesConfiguration configuration) {
+    @Inject
+    StaticContextHandlerConfig(final PropertiesConfiguration configuration) {
         this.configuration = configuration;
     }
 
