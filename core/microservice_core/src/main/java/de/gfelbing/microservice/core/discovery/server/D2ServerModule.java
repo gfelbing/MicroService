@@ -86,7 +86,6 @@ public final class D2ServerModule extends AbstractModule {
                     }).collect(GuavaCollect.immutableList());
                 })
                 .flatMap(Collection::stream)
-                .collect(GuavaCollect.immutableList())
-                ;
+                .collect(GuavaCollect.immutableList());
     }
 }

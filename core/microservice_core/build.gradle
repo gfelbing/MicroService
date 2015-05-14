@@ -1,4 +1,3 @@
-apply plugin: 'pegasus'
 apply plugin: 'checkstyle'
 
 configurations {
@@ -7,11 +6,7 @@ configurations {
 }
 
 dependencies {
-    compile project(path: ':microservice_core_api', configuration: 'dataTemplate')
-    compile deps.pegasus.restliServer
-    compile deps.pegasus.restliClient
-    compile deps.pegasus.r2Jetty
-    compile deps.pegasus.restliGuiceBridge
+    compile deps.jetty
     compile deps.pegasus.d2
     compile deps.guice
     compile deps.json
@@ -19,7 +14,6 @@ dependencies {
     compile deps.configuration
     compile deps.parseq
     checkstyleConfig deps.checkstyle
-    restClientCompile deps.pegasus.restliCommon
 }
 
 checkstyle {

@@ -1,7 +1,6 @@
 package de.gfelbing.microservice.core.http.jetty.server;
 
 import com.google.common.collect.ImmutableList;
-import org.eclipse.jetty.server.Connector;
 
 /**
  * Configuration of a Jetty-Server, should be provided by the service.
@@ -10,8 +9,14 @@ import org.eclipse.jetty.server.Connector;
  */
 public interface JettyServerConfiguration {
     /**
+     * Can be multiple ones for different IPs, but all of them will have the same port.
      * @return connectors, the webserver will bind the socket to.
-     * Can be multiple ones for different IPs, but all of them will have the same port
      */
-    ImmutableList<Connector> getHttpConnectors();
+    ImmutableList<String> getHosts();
+
+    /**
+     * The port jetty will bind to.
+     * @return the Port as Integer.
+     */
+    Integer getPort();
 }

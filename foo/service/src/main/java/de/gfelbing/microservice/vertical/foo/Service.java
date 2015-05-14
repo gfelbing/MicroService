@@ -1,31 +1,31 @@
-package de.gfelbing.microservice.core.service;
+package de.gfelbing.microservice.vertical.foo;
 
 import com.google.common.collect.ImmutableList;
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import de.gfelbing.microservice.core.common.LifeCycle;
 import de.gfelbing.microservice.core.discovery.server.D2Server;
 import de.gfelbing.microservice.core.http.jetty.server.JettyServer;
+import de.gfelbing.microservice.core.common.LifeCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Handles the LifeCycle of all classes having a lifecycle.
+ * Example Service handling used LifeCycles.
  *
- * @author gfelbing@github.com on 03.05.15.
+ * @author gfelbing@github.com on 14.05.15.
  */
 @Singleton
-public final class FullStackRestLiService implements LifeCycle {
+public class Service implements LifeCycle {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FullStackRestLiService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Service.class);
 
     private final ImmutableList<LifeCycle> servers;
 
     @Inject
-    FullStackRestLiService(final JettyServer httpServer, final D2Server d2Server) {
+    Service(final JettyServer httpServer, final D2Server d2Server) {
         this.servers = ImmutableList.of(httpServer, d2Server);
     }
 
@@ -85,6 +85,4 @@ public final class FullStackRestLiService implements LifeCycle {
             return State.UP;
         }
     }
-
-
 }

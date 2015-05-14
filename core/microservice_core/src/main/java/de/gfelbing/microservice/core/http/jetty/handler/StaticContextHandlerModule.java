@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
  *
  * @author gfelbing@github.com on 06.05.15.
  */
-public class StaticContextHandlerModule extends AbstractModule {
+public final class StaticContextHandlerModule extends AbstractModule {
 
     @Override
     protected void configure() {
@@ -43,7 +43,8 @@ public class StaticContextHandlerModule extends AbstractModule {
     @Provides
     @Singleton
     @Inject
-    ContextHandler staticResourceHandler(final StaticContextHandlerConfiguration serviceConfiguration) throws UnavailableException {
+    ContextHandler staticResourceHandler(final StaticContextHandlerConfiguration serviceConfiguration)
+            throws UnavailableException {
         final ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setResourceBase(serviceConfiguration.getStaticResources());
         final ContextHandler contextHandler = new ContextHandler(serviceConfiguration.getStaticContext());

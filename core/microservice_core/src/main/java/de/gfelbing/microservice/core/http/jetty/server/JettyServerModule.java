@@ -3,16 +3,13 @@ package de.gfelbing.microservice.core.http.jetty.server;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.AbstractModule;
 import com.google.inject.Binding;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
-import com.google.inject.Singleton;
-import com.google.inject.TypeLiteral;
 import de.gfelbing.microservice.core.util.GuavaCollect;
-import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.handler.ContextHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * HttpJettyServerModule.
@@ -26,9 +23,6 @@ import org.slf4j.LoggerFactory;
  */
 public final class JettyServerModule extends AbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JettyServerModule.class);
-    private final ImmutableList.Builder<TypeLiteral<ContextHandler>> contextHandlerBuilder = new ImmutableList.Builder<>();
-
     @Override
     protected void configure() {
     }
@@ -41,10 +35,8 @@ public final class JettyServerModule extends AbstractModule {
     @Inject
     JettyServer getHttpJettyServer(
             final ImmutableList<ContextHandler> contextHandler,
-            final JettyServerConfiguration serviceConfiguration) {
-        final ImmutableList<Connector> httpConnectors = serviceConfiguration.getHttpConnectors();
-        return new JettyServer(httpConnectors.toArray(new Connector[httpConnectors.size()]))
-                .addAll(contextHandler);
+            final JettyServerConfiguration configuration) {
+        return new JettyServer(configuration.getHosts(), configuration.getPort()).addAll(contextHandler);
     }
 
     /**
@@ -54,11 +46,9 @@ public final class JettyServerModule extends AbstractModule {
     @Singleton
     @Inject
     ImmutableList<ContextHandler> contextHandler(final Injector injector) {
-        final ImmutableList<Binding<ContextHandler>> contextHandlerBindings = injector.getAllBindings().entrySet().stream()
+        return injector.getAllBindings().entrySet().stream()
                 .filter(entry -> ContextHandler.class.equals(entry.getKey().getTypeLiteral().getRawType()))
                 .map((keyBindingEntry) -> (Binding<ContextHandler>) keyBindingEntry.getValue())
-                .collect(GuavaCollect.immutableList());
-        return contextHandlerBindings.stream()
                 .map(binding -> injector.getInstance(binding.getKey()))
                 .collect(GuavaCollect.immutableList());
     }

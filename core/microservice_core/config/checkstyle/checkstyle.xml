@@ -181,6 +181,16 @@
         <module name="TodoComment"/>
         <module name="UpperEll"/>
 
+        <!-- Additional checks -->
+        <!-- Avoid guice annotations, use javax-annotations instead-->
+        <module name="IllegalImport">
+            <property name="illegalPkgs" value="
+            com.google.inject.Inject,
+            com.google.inject.Singleton,
+            com.google.inject.name.Named,
+            com.google.inject.Provider,
+            com.google.inject.Scope"/>
+        </module>
     </module>
 
 </module>

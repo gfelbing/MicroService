@@ -18,7 +18,7 @@ import java.util.concurrent.ScheduledExecutorService;
  *
  * @author gfelbing@github.com on 06.05.15.
  */
-public class ExecutorServiceModule extends AbstractModule {
+public final class ExecutorServiceModule extends AbstractModule {
 
     @Override
     protected void configure() {

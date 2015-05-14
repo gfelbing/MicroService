@@ -1,12 +1,12 @@
 package de.gfelbing.microservice.core.rest.parseq;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
 import com.google.inject.Provides;
-import com.google.inject.Singleton;
 import com.linkedin.parseq.Engine;
 import com.linkedin.parseq.EngineBuilder;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
@@ -19,7 +19,7 @@ import java.util.concurrent.ScheduledExecutorService;
  *
  * @author gfelbing@github.com on 06.05.15.
  */
-public class ParseqModule extends AbstractModule {
+public final class ParseqModule extends AbstractModule {
 
     @Override
     protected void configure() {

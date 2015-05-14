@@ -13,20 +13,24 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * TODO: Add statement here.
+ * Wraps a D2 @link{DynamicClient} to implement LifeCycle.
  *
  * @author gfelbing@github.com on 06.05.15.
  */
 @Singleton
-public class D2DynamicLifeCycleClient implements LifeCycle {
+public final class D2DynamicLifeCycleClient implements LifeCycle {
 
     private static final Logger LOG = LoggerFactory.getLogger(D2DynamicLifeCycleClient.class);
 
     private final DynamicClient dynamicClient;
     private final AtomicReference<State> lifeCycleState;
 
+    /**
+     * Default constructor used by guice.
+     * @param dynamicClient to be wrapped.
+     */
     @Inject
-    public D2DynamicLifeCycleClient(DynamicClient dynamicClient) {
+    public D2DynamicLifeCycleClient(final DynamicClient dynamicClient) {
         this.dynamicClient = dynamicClient;
         this.lifeCycleState = new AtomicReference<>(State.CREATED);
     }
@@ -48,13 +52,13 @@ public class D2DynamicLifeCycleClient implements LifeCycle {
         lifeCycleState.set(State.STARTING);
         dynamicClient.start(new Callback<None>() {
             @Override
-            public void onError(Throwable e) {
+            public void onError(final Throwable e) {
                 LOG.error("There was an error starting the D2Client", e);
                 lifeCycleState.set(State.ERROR);
             }
 
             @Override
-            public void onSuccess(None result) {
+            public void onSuccess(final None result) {
                 LOG.info("D2 Client successfully started.");
                 lifeCycleState.set(State.UP);
             }
@@ -71,13 +75,13 @@ public class D2DynamicLifeCycleClient implements LifeCycle {
         lifeCycleState.set(State.STOPPING);
         dynamicClient.shutdown(new Callback<None>() {
             @Override
-            public void onError(Throwable e) {
+            public void onError(final Throwable e) {
                 LOG.error("There was an error stopping the D2Client", e);
                 lifeCycleState.set(State.ERROR);
             }
 
             @Override
-            public void onSuccess(None result) {
+            public void onSuccess(final None result) {
                 LOG.error("D2 Client successfully stopped.");
                 lifeCycleState.set(State.STOPPED);
             }

@@ -7,9 +7,6 @@ buildscript {
         mavenCentral()
         mavenLocal()
     }
-    dependencies {
-        classpath deps.pegasus.gradlePlugins
-    }
 }
 
 subprojects {
@@ -26,14 +23,5 @@ subprojects {
 
     configurations {
         all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-    }
-
-    afterEvaluate {
-        if (project.plugins.hasPlugin('pegasus')) {
-            dependencies {
-                dataTemplateCompile deps.pegasus.data
-                restClientCompile deps.pegasus.restliClient
-            }
-        }
     }
 }

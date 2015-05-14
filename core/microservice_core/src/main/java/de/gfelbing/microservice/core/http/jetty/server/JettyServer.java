@@ -27,11 +27,12 @@ package de.gfelbing.microservice.core.http.jetty.server;
 
 import com.google.common.collect.ImmutableList;
 import de.gfelbing.microservice.core.common.LifeCycle;
+import de.gfelbing.microservice.core.util.GuavaCollect;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
-import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
@@ -50,28 +51,24 @@ public final class JettyServer implements LifeCycle {
     private final AtomicReference<State> healthState;
 
     /**
-     * Constructor used by the guice module, takes HttpServerFactory.DEFAULT_THREAD_POOL_SIZE as thread-pool size.
-     *
-     * @param connectors Array of Connectors to which the jetty server will bind itself.
-     */
-    public JettyServer(final Connector[] connectors) {
-        this(connectors, DEFAULT_THREAD_POOL_SIZE, new Server());
-    }
-
-
-    /**
      * Constructor creating a jetty server and initializes a ContextHandlerCollection,
      * which can be filled by addHandler().
      *
-     * @param connectors     Array of Connectors to which the jetty server will bind itself.
-     * @param threadPoolSize The size of the QueuedThreadPool used by jetty.
-     * @param server         The Jetty-Server to be wrapped
+     * @param hosts    IPs / Hostnames jetty will bind itself to.
+     * @param port     Port to which the jetty server will bind itself.
      */
-    public JettyServer(final Connector[] connectors, final Integer threadPoolSize, Server server) {
+    public JettyServer(final ImmutableList<String> hosts, final Integer port) {
         this.healthState = new AtomicReference<>(State.CREATED);
-        this.server = server;
-        this.server.setConnectors(connectors);
-        this.server.setThreadPool(new QueuedThreadPool(threadPoolSize));
+        this.server = new Server();
+
+        final ImmutableList<Connector> connectors = hosts.stream().map(host -> {
+            ServerConnector connector = new ServerConnector(server);
+            connector.setHost(host);
+            connector.setPort(port);
+            return connector;
+        }).collect(GuavaCollect.immutableList());
+
+        this.server.setConnectors(connectors.toArray(new Connector[connectors.size()]));
         this.contextHandler = new ContextHandlerCollection();
         this.server.setHandler(contextHandler);
     }
@@ -88,7 +85,12 @@ public final class JettyServer implements LifeCycle {
         return this;
     }
 
-    public JettyServer addAll(ImmutableList<ContextHandler> contextHandlers) {
+    /**
+     * Invokes @link{addHandler()} for each ContextHandler.
+     * @param contextHandlers Handler to add.
+     * @return itself for chaining.
+     */
+    public JettyServer addAll(final ImmutableList<ContextHandler> contextHandlers) {
         contextHandlers.forEach(contextHandler::addHandler);
         return this;
     }

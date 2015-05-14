@@ -1,8 +1,6 @@
 package de.gfelbing.microservice.core.common;
 
 
-import de.gfelbing.microservice.core.api.HealthState;
-
 /**
  * Classes implementing this interface have a defined life cycle defined by the methods of this interface.
  *
@@ -59,24 +57,5 @@ public interface LifeCycle {
          * start() or stop() failed.
          */
         ERROR
-    }
-
-    public static HealthState map(final LifeCycle.State state) {
-        switch (state) {
-            case ERROR:
-                return HealthState.ERROR;
-            case STOPPED:
-                return HealthState.STOPPED;
-            case STOPPING:
-                return HealthState.STOPPING;
-            case UP:
-                return HealthState.OK;
-            case STARTING:
-                return HealthState.STARTING;
-            case CREATED:
-                return HealthState.CREATED;
-            default:
-                return HealthState.$UNKNOWN;
-        }
     }
 }

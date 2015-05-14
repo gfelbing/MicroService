@@ -1,8 +1,12 @@
 package de.gfelbing.microservice.vertical.foo;
 
 import com.google.inject.Guice;
-import de.gfelbing.microservice.core.service.FullStackRestLiModule;
-import de.gfelbing.microservice.core.service.FullStackRestLiService;
+import de.gfelbing.microservice.core.concurrency.ExecutorServiceModule;
+import de.gfelbing.microservice.core.discovery.client.D2ClientModule;
+import de.gfelbing.microservice.core.discovery.server.D2ServerModule;
+import de.gfelbing.microservice.core.http.jetty.handler.StaticContextHandlerModule;
+import de.gfelbing.microservice.core.http.jetty.server.JettyServerModule;
+import de.gfelbing.microservice.core.rest.parseq.ParseqModule;
 import de.gfelbing.microservice.vertical.foo.config.ConfigurationModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +54,13 @@ public final class Foo {
         Guice
                 .createInjector(
                         new ConfigurationModule(),
-                        new FullStackRestLiModule())
-                .getInstance(FullStackRestLiService.class)
+                        new ExecutorServiceModule(),
+                        new D2ClientModule(),
+                        new D2ServerModule(),
+                        new JettyServerModule(),
+                        new StaticContextHandlerModule(),
+                        new ParseqModule())
+                .getInstance(Service.class)
                 .start();
     }
 }
