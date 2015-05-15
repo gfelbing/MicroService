@@ -2,6 +2,7 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
 apply from: 'vendor.gradle'
 
 version = '0.0.1-SNAPSHOT'
@@ -25,6 +26,5 @@ dependencies {
 
 checkstyle {
     toolVersion = versions.checkstyle
-    ignoreFailures = true
 }
 

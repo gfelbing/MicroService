@@ -12,7 +12,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
  */
 public final class StaticContextHandlerConfig implements StaticContextHandlerConfiguration {
 
-    public static final String RESOURCES_CLASSPATH_PREFIX = "resources://";
+    private static final String RESOURCES_CLASSPATH_PREFIX = "resources://";
     private final PropertiesConfiguration configuration;
 
     @Inject
@@ -24,7 +24,7 @@ public final class StaticContextHandlerConfig implements StaticContextHandlerCon
     public String getStaticResources() {
         final String staticResources = configuration.getString("static.resources");
         if (staticResources.startsWith(RESOURCES_CLASSPATH_PREFIX)) {
-            return Resources.getResource(staticResources.replaceFirst(RESOURCES_CLASSPATH_PREFIX,"")).getPath();
+            return Resources.getResource(staticResources.replaceFirst(RESOURCES_CLASSPATH_PREFIX, "")).getPath();
         } else {
             return staticResources;
         }

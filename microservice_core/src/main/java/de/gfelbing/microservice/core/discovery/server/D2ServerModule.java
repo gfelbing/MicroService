@@ -11,11 +11,9 @@ import com.linkedin.d2.balancer.servers.ZooKeeperConnectionManager;
 import com.linkedin.d2.balancer.servers.ZooKeeperServer;
 import com.linkedin.d2.discovery.util.D2Config;
 import de.gfelbing.microservice.core.util.GuavaCollect;
-import org.json.simple.JSONObject;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -41,7 +39,6 @@ public final class D2ServerModule extends AbstractModule {
     @Singleton
     @Inject
     D2Config d2Config(final D2ServerConfiguration d2ServerConfiguration) {
-        final Map<String, JSONObject> foo = new HashMap<>();
         return new D2Config(
                 d2ServerConfiguration.getZkConnectString(),
                 d2ServerConfiguration.getZkSessionTimeout(),
