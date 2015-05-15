@@ -1,5 +1,6 @@
 package de.gfelbing.microservice.vertical.foo.config;
 
+import com.google.common.io.Resources;
 import com.google.inject.Inject;
 import de.gfelbing.microservice.core.http.jetty.handler.StaticContextHandlerConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -11,6 +12,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
  */
 public final class StaticContextHandlerConfig implements StaticContextHandlerConfiguration {
 
+    public static final String RESOURCES_CLASSPATH_PREFIX = "resources://";
     private final PropertiesConfiguration configuration;
 
     @Inject
@@ -20,7 +22,12 @@ public final class StaticContextHandlerConfig implements StaticContextHandlerCon
 
     @Override
     public String getStaticResources() {
-        return configuration.getString("static.resources");
+        final String staticResources = configuration.getString("static.resources");
+        if (staticResources.startsWith(RESOURCES_CLASSPATH_PREFIX)) {
+            return Resources.getResource(staticResources.replaceFirst(RESOURCES_CLASSPATH_PREFIX,"")).getPath();
+        } else {
+            return staticResources;
+        }
     }
 
     @Override

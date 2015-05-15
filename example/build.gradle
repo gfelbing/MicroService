@@ -1,27 +1,30 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'checkstyle'
+apply from: 'vendor.gradle'
+
 version = '0.0.1-SNAPSHOT'
 
-buildscript {
-    apply from: 'vendor.gradle'
+sourceCompatibility = JavaVersion.VERSION_1_8
 
-    repositories {
-        mavenCentral()
-        mavenLocal()
-    }
+repositories {
+    mavenCentral()
+    mavenLocal()
 }
 
-subprojects {
-    apply plugin: 'java'
-    apply plugin: 'idea'
-    apply plugin: 'eclipse'
-
-    sourceCompatibility = JavaVersion.VERSION_1_8
-
-    repositories {
-        mavenCentral()
-        mavenLocal()
-    }
-
-    configurations {
-        all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-    }
+configurations {
+    all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    checkstyleConfig
 }
+
+dependencies {
+    compile deps.core
+    checkstyleConfig deps.checkstyle
+}
+
+checkstyle {
+    toolVersion = versions.checkstyle
+    ignoreFailures = true
+}
+
