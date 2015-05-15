@@ -1,5 +1,6 @@
 package de.gfelbing.microservice.core.util;
 
+import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -24,44 +25,7 @@ public final class GuavaCollect {
      * @return A collector for converting a Stream\<T\> into a ImmutableList\<T\>
      */
     public static <T> Collector<T, ImmutableList.Builder<T>, ImmutableList<T>> immutableList() {
-        return new ImmutableListCollector<T>();
-    }
-
-    /**
-     * Collects all Elements of an java.util.Stream and builds an guava ImmutableList.
-     *
-     * @param <T> The element-type of the stream and list.
-     */
-    static final class ImmutableListCollector<T> implements Collector<T, ImmutableList.Builder<T>, ImmutableList<T>> {
-
-        @Override
-        public Supplier<ImmutableList.Builder<T>> supplier() {
-            return (() -> ImmutableList.builder());
-        }
-
-        @Override
-        public BiConsumer<ImmutableList.Builder<T>, T> accumulator() {
-            return (builder, t) -> builder.add(t);
-        }
-
-        @Override
-        public BinaryOperator<ImmutableList.Builder<T>> combiner() {
-            return (left, right) -> {
-                left.addAll(right.build());
-                return left;
-            };
-        }
-
-        @Override
-        public Function<ImmutableList.Builder<T>, ImmutableList<T>> finisher() {
-            return (b -> b.build());
-        }
-
-        @Override
-        public Set<Characteristics> characteristics() {
-            return EnumSet.of(Characteristics.UNORDERED);
-        }
-
+        return new ImmutableCollector<T, ImmutableList<T>, ImmutableList.Builder<T>>(ImmutableList.Builder::new);
     }
 
     /**
@@ -69,28 +33,36 @@ public final class GuavaCollect {
      * @return A collector for converting a Stream\<T\> into a ImmutableList\<T\>
      */
     public static <T> Collector<T, ImmutableSet.Builder<T>, ImmutableSet<T>> immutableSet() {
-        return new ImmutableSetCollector<T>();
+        return new ImmutableCollector<T, ImmutableSet<T>, ImmutableSet.Builder<T>>(ImmutableSet.Builder::new);
     }
 
     /**
-     * Collects all Elements of an java.util.Stream and builds an guava ImmutableSet.
+     * Collects all Elements of an java.util.Stream and builds an guava ImmutableCollection.
      *
      * @param <T> The element-type of the stream and list.
      */
-    static final class ImmutableSetCollector<T> implements Collector<T, ImmutableSet.Builder<T>, ImmutableSet<T>> {
+    static final class ImmutableCollector
+            <T, C extends ImmutableCollection<T>, B extends ImmutableCollection.Builder<T>>
+            implements Collector<T, B, C> {
 
-        @Override
-        public Supplier<ImmutableSet.Builder<T>> supplier() {
-            return (() -> ImmutableSet.builder());
+        private final Supplier<B> supplier;
+
+        public ImmutableCollector(final Supplier<B> supplier) {
+            this.supplier = supplier;
         }
 
         @Override
-        public BiConsumer<ImmutableSet.Builder<T>, T> accumulator() {
+        public Supplier<B> supplier() {
+            return supplier;
+        }
+
+        @Override
+        public BiConsumer<B, T> accumulator() {
             return (builder, t) -> builder.add(t);
         }
 
         @Override
-        public BinaryOperator<ImmutableSet.Builder<T>> combiner() {
+        public BinaryOperator<B> combiner() {
             return (left, right) -> {
                 left.addAll(right.build());
                 return left;
@@ -98,8 +70,8 @@ public final class GuavaCollect {
         }
 
         @Override
-        public Function<ImmutableSet.Builder<T>, ImmutableSet<T>> finisher() {
-            return (b -> b.build());
+        public Function<B, C> finisher() {
+            return (b -> (C) b.build());
         }
 
         @Override
