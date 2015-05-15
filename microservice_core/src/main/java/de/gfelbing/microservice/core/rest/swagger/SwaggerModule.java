@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.wordnik.swagger.jaxrs.listing.ApiListingResource;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import javax.inject.Inject;
@@ -43,6 +44,8 @@ public final class SwaggerModule extends AbstractModule {
         final ImmutableList<String> packages = ImmutableList.<String>builder()
                 .add(ApiListingResource.class.getPackage().getName())
                 .addAll(swaggerConfiguration.getResourcePackages()).build();
-        return new ResourceConfig().packages(packages.toArray(new String[packages.size()]));
+        return new ResourceConfig()
+                .packages(packages.toArray(new String[packages.size()]))
+                .register(JacksonFeature.class);
     }
 }

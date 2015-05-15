@@ -35,7 +35,7 @@ public final class SwaggerConfigurationImpl implements
      */
     @Override
     public Swagger configure(final Swagger swagger) {
-        return swagger;
+        return swagger.basePath("/" + getRestContext());
     }
 
     /**

@@ -10,17 +10,6 @@ checkstyle {
 }
 
 dependencies {
-    compile deps.configuration
     compile deps.core
-    compile deps.google.guava
-    compile deps.google.guice
-    compile deps.google.json
-    compile deps.jetty
-    compile deps.linkedin.d2
-    compile deps.linkedin.parseq
-    compile deps.logback
-    compile deps.swagger.hk2guice
-    compile deps.swagger.jersey
-    compile deps.swagger.jaxrs
     checkstyleConfig deps.checkstyle
 }

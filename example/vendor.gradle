@@ -1,0 +1,13 @@
+ext {
+    versions = [
+            'checkstyle': '6.6'
+    ]
+    deps = [
+            'checkstyle'   : 'com.puppycrawl.tools:checkstyle:' + versions.checkstyle,
+            'core': [
+                    group: 'de.gfelbing',
+                    name: 'microservice_core',
+                    version: '+'
+            ],
+    ]
+}

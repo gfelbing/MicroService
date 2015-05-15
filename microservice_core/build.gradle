@@ -2,6 +2,7 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'checkstyle'
+apply plugin: 'maven'
 apply from: 'vendor.gradle'
 
 group = 'de.gfelbing'
@@ -26,17 +27,20 @@ dependencies {
     compile deps.google.guice
     compile deps.google.json
     compile deps.jetty
-    compile deps.swagger.jersey
-    compile deps.swagger.hk2guice
+    compile deps.jersey.servlet
+    compile deps.jersey.jackson
+    compile deps.jersey.hk2guice
     compile deps.swagger.jaxrs
     compile deps.linkedin.d2
     compile deps.linkedin.parseq
     checkstyleConfig deps.checkstyle
 }
 
-
 checkstyle {
     toolVersion = versions.checkstyle
     ignoreFailures = true
 }
 
+artifacts {
+    archives jar
+}

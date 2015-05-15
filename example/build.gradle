@@ -1,7 +1,7 @@
 version = '0.0.1-SNAPSHOT'
 
 buildscript {
-    apply from: 'build-support/vendor.gradle'
+    apply from: 'vendor.gradle'
 
     repositories {
         mavenCentral()
