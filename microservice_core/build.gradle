@@ -1,4 +1,18 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
 apply plugin: 'checkstyle'
+apply from: 'vendor.gradle'
+
+group = 'de.gfelbing'
+version = '0.0.1-SNAPSHOT'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
 
 configurations {
     checkstyleConfig
@@ -19,6 +33,7 @@ dependencies {
     compile deps.linkedin.parseq
     checkstyleConfig deps.checkstyle
 }
+
 
 checkstyle {
     toolVersion = versions.checkstyle
