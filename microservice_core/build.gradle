@@ -27,7 +27,8 @@ dependencies {
     compile deps.google.guava
     compile deps.google.guice
     compile deps.google.json
-    compile deps.jetty
+    compile deps.jetty.server
+    compile deps.jetty.rewrite
     compile deps.jersey.servlet
     compile deps.jersey.jackson
     compile deps.jersey.hk2guice

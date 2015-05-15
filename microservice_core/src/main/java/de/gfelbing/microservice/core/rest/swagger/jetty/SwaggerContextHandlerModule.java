@@ -4,6 +4,9 @@ import com.google.inject.AbstractModule;
 import com.google.inject.BindingAnnotation;
 import com.google.inject.Provides;
 import de.gfelbing.microservice.core.rest.swagger.SwaggerServlet;
+import org.eclipse.jetty.rewrite.handler.RedirectPatternRule;
+import org.eclipse.jetty.rewrite.handler.RewriteHandler;
+import org.eclipse.jetty.rewrite.handler.RewritePatternRule;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -53,8 +56,15 @@ public final class SwaggerContextHandlerModule extends AbstractModule {
         final ServletContextHandler handler = new ServletContextHandler();
         final ServletHolder servletHolder = new ServletHolder(jerseyServlet);
 
-        handler.setContextPath("/" + serverConfiguration.getRestContext());
-        handler.addServlet(servletHolder, "/*");
+        final RewriteHandler rewriteHandler = new RewriteHandler();
+        RedirectPatternRule rewritePatternRule = new RedirectPatternRule();
+        rewritePatternRule.setPattern("/health");
+        rewritePatternRule.setLocation("/" + serverConfiguration.getRestContext() + "/health");
+        rewriteHandler.addRule(rewritePatternRule);
+
+        handler.setContextPath("/");
+        handler.setHandler(rewriteHandler);
+        handler.addServlet(servletHolder, "/" + serverConfiguration.getRestContext() + "/*");
 
         return handler;
     }
